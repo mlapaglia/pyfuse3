@@ -10,13 +10,10 @@ namespace_packages = false
 strict = true
 
 [tool.cibuildwheel]
-# Build for Python 3.8+ as specified in setup.py
 build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
 
-# Skip 32-bit builds and musl builds (FUSE is typically not available)
 skip = "*-win32 *-manylinux_i686 *-musllinux*"
 
-# Install system dependencies before building
 before-all = [
     # Linux
     "bash -c 'if command -v yum >/dev/null 2>&1; then yum update -y && yum install -y fuse3-devel pkgconfig; elif command -v apt-get >/dev/null 2>&1; then apt-get update && apt-get install -y libfuse3-dev pkg-config; fi'",
@@ -24,17 +21,14 @@ before-all = [
     "bash -c 'if [[ \"$OSTYPE\" == \"darwin\"* ]]; then brew install macfuse pkg-config || true; fi'"
 ]
 
-# Install build dependencies
 before-build = [
     "pip install setuptools cython",
     "python setup.py build_cython"
 ]
 
-# Test the wheels
 test-requires = ["pytest", "pytest-trio", "trio"]
 test-command = "python -c \"import pyfuse3; print('pyfuse3 imported successfully')\""
 
-# Environment variables for the build
 [tool.cibuildwheel.linux]
 environment = { PKG_CONFIG_PATH = "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig" }
 
