@@ -26,8 +26,6 @@ test-requires = ["pytest", "pytest-trio", "trio"]
 test-command = "python -c \"import pyfuse3; print('pyfuse3 imported successfully')\""
 
 [tool.cibuildwheel.linux]
-# Install FUSE development libraries for manylinux_2_28 (AlmaLinux 8)
-# AlmaLinux 8 has dnf and fuse3-devel available
 before-all = [
     "dnf install -y fuse3-devel pkgconfig"
 ]

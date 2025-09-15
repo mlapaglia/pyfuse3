@@ -29,8 +29,7 @@ def update_version(new_version):
     
     with open(setup_py) as f:
         content = f.read()
-    
-    # Update the version
+
     content = re.sub(
         r"PYFUSE3_VERSION = ['\"]([^'\"]+)['\"]",
         f"PYFUSE3_VERSION = '{new_version}'",
@@ -47,7 +46,6 @@ def create_git_tag(version):
     tag = f"v{version}"
     
     try:
-        # Add and commit the version change
         subprocess.run(["git", "add", "setup.py"], check=True)
         subprocess.run(["git", "commit", "-m", f"Bump version to {version}"], check=True)
         
@@ -76,17 +74,14 @@ def main():
     if args.dry_run:
         print("DRY RUN: Would update version and create tag")
         return
-    
-    # Confirm with user
+
     response = input("Continue? [y/N]: ")
     if response.lower() != 'y':
         print("Aborted")
         return
-    
-    # Update version
+
     update_version(args.version)
-    
-    # Create tag unless --no-tag is specified
+
     if not args.no_tag:
         create_git_tag(args.version)
 
