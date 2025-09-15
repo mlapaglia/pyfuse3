@@ -13,6 +13,10 @@ strict = true
 build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
 skip = "*-win32 *-manylinux_i686 *-musllinux*"
 
+# Use newer manylinux images to avoid CentOS 7 mirror issues
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+
 before-build = [
     "pip install setuptools cython",
     "python setup.py build_cython"
@@ -22,11 +26,10 @@ test-requires = ["pytest", "pytest-trio", "trio"]
 test-command = "python -c \"import pyfuse3; print('pyfuse3 imported successfully')\""
 
 [tool.cibuildwheel.linux]
-# Install FUSE development libraries for manylinux2014 (CentOS 7)
-# CentOS 7 has fuse-devel (FUSE 2.x) by default, fuse3-devel needs EPEL
+# Install FUSE development libraries for manylinux_2_28 (AlmaLinux 8)
+# AlmaLinux 8 has dnf and fuse3-devel available
 before-all = [
-    "yum install -y epel-release",
-    "yum install -y fuse3-devel pkgconfig"
+    "dnf install -y fuse3-devel pkgconfig"
 ]
 environment = { PKG_CONFIG_PATH = "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig" }
 

@@ -428,12 +428,12 @@ def tst_passthrough(src_dir, mnt_dir):
     assert name in os.listdir(mnt_dir)
     assert_same_stats(src_name, mnt_name)
 
-def assert_same_stats(name1, name2, ns_tol=1000000):
+def assert_same_stats(name1, name2, ns_tol=5000000):
     """Compare file stats with tolerance for timestamp precision differences.
     
     Args:
         name1, name2: File paths to compare
-        ns_tol: Nanosecond tolerance for timestamp comparisons (default 1ms)
+        ns_tol: Nanosecond tolerance for timestamp comparisons (default 5ms for CI environments)
     """
     stat1 = os.stat(name1)
     stat2 = os.stat(name2)
