@@ -22,9 +22,11 @@ test-requires = ["pytest", "pytest-trio", "trio"]
 test-command = "python -c \"import pyfuse3; print('pyfuse3 imported successfully')\""
 
 [tool.cibuildwheel.linux]
-# Use dnf/microdnf for newer CentOS/RHEL, fallback to yum for older systems
+# Install FUSE development libraries for manylinux2014 (CentOS 7)
+# CentOS 7 has fuse-devel (FUSE 2.x) by default, fuse3-devel needs EPEL
 before-all = [
-    "bash -c 'if command -v microdnf >/dev/null 2>&1; then microdnf install -y fuse3-devel pkgconf-pkg-config; elif command -v dnf >/dev/null 2>&1; then dnf install -y fuse3-devel pkgconf-pkg-config; elif command -v yum >/dev/null 2>&1; then yum install -y fuse3-devel pkgconfig; elif command -v apt-get >/dev/null 2>&1; then apt-get update && apt-get install -y libfuse3-dev pkg-config; else echo \"No supported package manager found\" && exit 1; fi'"
+    "yum install -y epel-release",
+    "yum install -y fuse3-devel pkgconfig"
 ]
 environment = { PKG_CONFIG_PATH = "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig" }
 
